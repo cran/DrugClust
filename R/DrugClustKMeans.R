@@ -10,6 +10,14 @@
 #' @param num_iterations number of iterations
 #' @param features features matrix
 #' @param side_effects side_effects matrix
+#' @return (list(AUCFinal,AUPRFinal)) first value is the mean AUC on the various folders, second value is the mean AUPR on the various folders
+#' @examples
+#' # num_folds=3
+#' # num_clusters=4
+#' # num_iterations= 5
+#' #features is the features matrix (see InitFeatures function)
+#' # side effects is the matrix containing side effects (see InitSideEffects function)
+#' #result<-DrugClustKMeans(num_folds,num_clusters,num_iterations,features,side_effects)
 #' @export
 
 DrugClustKMeans<-function(num_folds,num_clusters,num_iterations,features,side_effects){
@@ -91,6 +99,10 @@ return(list(AUCFinal,AUPRFinal))
 #' @param num_clusters number of clusters desired
 #' @param features matrix features
 #' @param pharmat matrix of side effects
+#' @return number of pathways for various clusters
+#' @examples
+#' #features is the features matrix
+#' #resultSeeds<-DrugClustKMeansEnrichment(4,features)
 #' @export
 
 

@@ -11,7 +11,14 @@ DrugClustPAMEnrichment(num_clusters, features)
 
 \item{features}{matrix of features}
 }
+\value{
+number of pathways for various clusters
+}
 \description{
 Function Implementing DrugClust with PAM algorithm and Enrichment
+}
+\examples{
+#features is the features matrix
+#resultSeeds<-DrugClustPAMEnrichment(4,features)
 }
 

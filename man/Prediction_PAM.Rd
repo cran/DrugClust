@@ -22,4 +22,10 @@ predizioni matrix of predictions given PAM clustering
 \description{
 PAM prediction models
 }
+\examples{
+#A is the result of PAM_Model function
+#pamx comes from the PAM function
+#test is the feature test matrix
+#predizioni<-PredictionPAM(A,pamx,test)
+}
 

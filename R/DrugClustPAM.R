@@ -10,6 +10,14 @@
 #' @param num_iterations number of iterations
 #' @param features features matrix
 #' @param side_effects side_effects matrix
+#' @return (list(AUCFinal,AUPRFinal)) first value is the mean AUC on the various folders, second value is the mean AUPR on the various folders
+#' @examples
+#' # num_folds=3
+#' # num_clusters=4
+#' # num_iterations= 5
+#' #features is the features matrix (see InitFeatures function)
+#' # side effects is the matrix containing side effects (see InitSideEffects function)
+#' #result<-DrugClustPAM(num_folds,num_clusters,num_iterations,features,side_effects)
 #' @export
 
 DrugClustPAM<-function(num_folds,num_clusters,num_iterations,features,side_effects){
@@ -88,6 +96,10 @@ DrugClustPAM<-function(num_folds,num_clusters,num_iterations,features,side_effec
 #' @name DrugClustPAMEnrichment
 #' @param num_clusters number of clusters desired
 #' @param features matrix of features
+#' @return number of pathways for various clusters
+#' @examples
+#' #features is the features matrix
+#' #resultSeeds<-DrugClustPAMEnrichment(4,features)
 #' @export
 
 DrugClustPAMEnrichment<-function(num_clusters,features){

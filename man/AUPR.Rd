@@ -21,4 +21,11 @@ vectorAUPR vector containing AUPR values for the various folds, the function als
 \description{
 Function Implementing metrics calculation of AUPR
 }
+\examples{
+#Function for obtaining AUC
+#Once you have obtained predizioni with the Prediction function you can apply
+#this AUPR function using the following command (testpharmat sideeffects test matrix)
+#vectorAUPR<-numeric()
+#vectorAUPR<-AUPR(predizioni,testpharmat,vectorAUPR,"KSeeds")
+}
 

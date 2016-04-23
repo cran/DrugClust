@@ -19,4 +19,10 @@ predizioni matrix with a number of rows equal to the number of clusters and a nu
 \description{
 Function finding the predictions for the uncharacterized drugs given the KMeans clustering algorithm
 }
+\examples{
+# A will be the result of the previous call of KMeans model funcion
+#cl will be the result of KMeans function
+#test is the test feature matrix
+#predizioni<-PredictionKMeans(A,cl,test)
+}
 

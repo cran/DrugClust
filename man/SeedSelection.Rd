@@ -19,4 +19,13 @@ Seed subset of the feature matrix, where rows are the Seed drugs, and columns th
 \description{
 Given the seeds, it creates the submatrix of the features where the rows are just the seeds drugs
 }
+\examples{
+r <- 8
+c <- 10
+m0 <- matrix(0, r, c)
+num_clusters=4
+features<-apply(m0, c(1,2), function(x) sample(c(0,1),1))
+s<-RandomSeedGenerator(num_clusters,nrow(features))
+Seed<-SeedSelection(features,num_clusters,s)
+}
 

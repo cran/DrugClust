@@ -12,6 +12,14 @@
 #' @param num_iterations number of iterations
 #' @param features features matrix
 #' @param side_effects side_effects matrix
+#' @return (list(AUCFinal,AUPRFinal)) first value is the mean AUC on the various folders, second value is the mean AUPR on the various folders
+#' @examples
+#' # num_folds=3
+#' # num_clusters=4
+#' # num_iterations= 5
+#' # features is the features matrix (see InitFeatures function)
+#' # side effects is the matrix containing side effects (see InitSideEffects function)
+#' #result<-DrugClustKSeeds(num_folds,num_clusters,num_iterations,features,side_effects)
 #' @export
 
 
@@ -37,7 +45,7 @@ for(j in 1:num_iterations){
   testpharmat = side_effects[folds == i,]
 
   #KSeeds clustering method application
-  s<-RandomSeedGenerator(num_clusters) #function that generates randomly the numbers that will be the seeds of the cluster
+  s<-RandomSeedGenerator(num_clusters,nrow(train)) #function that generates randomly the numbers that will be the seeds of the cluster
   Seed<-SeedSelection(train,num_clusters,s)
   #Return the list of clusters
   clusters<-KSeedsClusters (train,num_clusters,Seed,s)
@@ -60,7 +68,7 @@ for(j in 1:num_iterations){
     testpharmat = side_effects[folds == i,]
 
     #KSeeds clustering
-    s<-RandomSeedGenerator(num_clusters) #function that generates randomly the numbers that will be the seeds of the cluster
+    s<-RandomSeedGenerator(num_clusters,nrow(train)) #function that generates randomly the numbers that will be the seeds of the cluster
     Seed<-SeedSelection(train,num_clusters,s)
 
     #Return the list of clusters
@@ -106,6 +114,10 @@ return(list(AUCFinal,AUPRFinal))
 #' @param num_clusters number of clusters
 #' @param features matrix of features
 #' @param pharmat matrix of side effects
+#' @return number of pathways for various clusters
+#' @examples
+#' #features is the features matrix
+#' #resultSeeds<-DrugClustKSeedsEnrichment(4,features)
 #' @export
 
 

@@ -17,4 +17,8 @@ pamx structure with various values resulting from PAM clustering algorithm
 \description{
 PAM clustering algorithm
 }
+\examples{
+#train is the train feature matrix
+#pamx<-PAM(train,4)
+}
 

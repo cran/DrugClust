@@ -19,4 +19,10 @@ vector_numb_pathway return a vector telling in how many pathways the various clu
 \description{
 Function Performing Proteins Enrichment using Gene Ontology
 }
+\examples{
+#feature is the feature matrix
+# pamx is the result of the PAM function
+# and pamx$clustering gives the list assigning each element to a certain cluster
+#all_pathways<-Enrichment_Proteins(features,4,pamx$clustering)
+}
 

@@ -17,7 +17,18 @@ DrugClustKSeeds(num_folds, num_clusters, num_iterations, features, side_effects)
 
 \item{side_effects}{side_effects matrix}
 }
+\value{
+(list(AUCFinal,AUPRFinal)) first value is the mean AUC on the various folders, second value is the mean AUPR on the various folders
+}
 \description{
 Function Implementing metrics calculation DrugClust
+}
+\examples{
+# num_folds=3
+# num_clusters=4
+# num_iterations= 5
+# features is the features matrix (see InitFeatures function)
+# side effects is the matrix containing side effects (see InitSideEffects function)
+#result<-DrugClustKSeeds(num_folds,num_clusters,num_iterations,features,side_effects)
 }
 

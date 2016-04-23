@@ -7,7 +7,7 @@
 InitFeatures(namefeatures)
 }
 \arguments{
-\item{namefeatures}{name of the file where the features are stored.}
+\item{namefeatures}{name of the file where the features are stored.The file needs to be in the same folder where you have the code.}
 }
 \value{
 The matrix containing drugs features
@@ -16,5 +16,10 @@ The matrix containing drugs features
 Initialize the features matrix. The data needs to be binary matrices where each row is a
 drug, and columns represents drugs features. If the element in position ij is 1 it means that the ith drug interacts with the jth element
 (for example a protein). The same for the matrix where side effects are stored.
+}
+\examples{
+#Generate a sample features binary matrix
+#for example you will fin the file bioma2.txt which is a sample file for feature matrix
+#you can therefore type the command features<-InitFeatures("bio2mat.txt") to upload it
 }
 

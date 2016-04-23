@@ -17,4 +17,11 @@ folds: the elements divided in folds
 \description{
 Create the folds given the features matrix
 }
+\examples{
+r <- 8
+c <- 10
+m0 <- matrix(0, r, c)
+features<-apply(m0, c(1,2), function(x) sample(c(0,1),1))
+folds<-CreateFolds(features,4)
+}
 

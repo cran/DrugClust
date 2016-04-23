@@ -16,4 +16,9 @@ The matrix containing drugs side effects
 \description{
 Initialize the matrix of features and Side Effects
 }
+\examples{
+#Generate a sample features binary matrix
+#for example you will fin the file pharmat.txt which is a sample file of side_effects matrix
+#you can therefore type the command side_effects<-InitSideEffects("pharmat.txt") to upload it
+}
 

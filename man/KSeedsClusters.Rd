@@ -26,4 +26,14 @@ seeds are not recomputed at each iteration. This allows a speed up in
 terms of computational complexity and the algorithm terminates when
 all the drugs have been assigned.
 }
+\examples{
+r <- 8
+c <- 10
+m0 <- matrix(0, r, c)
+num_clusters=4
+features<-apply(m0, c(1,2), function(x) sample(c(0,1),1))
+s<-RandomSeedGenerator(num_clusters,nrow(features))
+Seed<-SeedSelection(features,num_clusters,s)
+clusters<-KSeedsClusters (features,num_clusters,Seed,s)
+}
 

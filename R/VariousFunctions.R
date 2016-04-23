@@ -6,8 +6,12 @@
 #'
 #'
 #' @name InitFeatures
-#' @param namefeatures name of the file where the features are stored.
+#' @param namefeatures name of the file where the features are stored.The file needs to be in the same folder where you have the code.
 #' @return The matrix containing drugs features
+#' @examples
+#' #Generate a sample features binary matrix
+#' #for example you will find the file bioma2.txt which is a sample file for feature matrix
+#' features<-InitFeatures("bio2mat.txt")
 #' @export
 
 InitFeatures<-function(namefeatures){
@@ -25,6 +29,10 @@ InitFeatures<-function(namefeatures){
 #' @name InitSideEffect
 #' @param nameSideEffects  name of the file where the side effects are stored. The format has to be a binary matrix, where the rows are the drugs and columns are the various side effects (1/0 meaning presence or absence of a certain side effect).
 #' @return The matrix containing drugs side effects
+#' @examples
+#' #Generate a sample features binary matrix
+#' #for example you will fin the file pharmat.txt which is a sample file of side_effects matrix
+#' side_effects<-InitSideEffects("pharmat.txt")
 #' @export
 
 InitSideEffects<-function(nameSideEffects){
@@ -43,6 +51,9 @@ InitSideEffects<-function(nameSideEffects){
 #' @param features is the features matrix that has to be divided in folds for performing cross validation
 #' @param num_folds number of folds desired
 #' @return folds: the elements divided in folds
+#' @examples
+#' features<-InitFeatures("bio2mat.txt")
+#' folds<-CreateFolds(features,4)
 #' @export
 
 CreateFolds<-function(features,num_folds){
@@ -57,14 +68,15 @@ CreateFolds<-function(features,num_folds){
 #'
 #' @name RandomSeedGenerator
 #' @param num_clusters number of clusters desired
+#' @param numbrowfeatures number of rows of the features matrix
 #' @return s list of seeds
 #' @examples
-#' s<-RandomSeedGenerator(4)
+#' features<-InitFeatures("bio2mat.txt")
+#' s<-RandomSeedGenerator(4,nrow(features))
 #' @export
 
-
-RandomSeedGenerator<-function(num_clusters){
-s<-sample(1:400,num_clusters,replace=FALSE)
+RandomSeedGenerator<-function(num_clusters,numbrowfeatures){
+s<-sample(1:numbrowfeatures,num_clusters,replace=FALSE)
 return(s)
 }
 
@@ -78,6 +90,10 @@ return(s)
 #' @param num_clusters number of clusters desired
 #' @param s the list of seeds
 #' @return Seed subset of the feature matrix, where rows are the Seed drugs, and columns the relative features
+#' @examples
+#' features<-InitFeatures("bio2mat.txt")
+#' s<-RandomSeedGenerator(num_clusters,nrow(features))
+#' Seed<-SeedSelection(features,num_clusters,s)
 #' @export
 
 SeedSelection<-function(features,num_clusters,s){
@@ -104,6 +120,11 @@ SeedSelection<-function(features,num_clusters,s){
 #' @param Seed subset of drugs features matrix, with just the Seeds as rows
 #' @param s the seeds of the clusters
 #' @return clusters list indicating the cluster to which each drug belongs to
+#' @examples
+#' features<-InitFeatures("bio2mat.txt")
+#' s<-RandomSeedGenerator(num_clusters,nrow(features))
+#' Seed<-SeedSelection(features,num_clusters,s)
+#' clusters<-KSeedsClusters (features,num_clusters,Seed,s)
 #' @export
 
 
@@ -140,6 +161,12 @@ KSeedsClusters <- function(train,num_clusters,Seed,s){
 #' @param s the seeds of the clusters
 #' @param clusters the list of clusters where the various drugs are
 #' @return A matrix containing prediction scores for each cluster
+#' @examples
+#' features<-InitFeatures("bio2mat.txt")
+#' side_effects<-InitiSideEffects("pharmat.txt")
+#' Seed<-SeedSelection(features,num_clusters,s)
+#' clusters<-KSeedsClusters (features,num_clusters,Seed,s)
+#' A<-KSeedsScores(features,side_effects,num_clusters,Seed,s,clusters)
 #' @export
 
 
@@ -147,7 +174,7 @@ KSeedsScores <- function(train,trainpharmat,num_clusters,Seed,s,clusters){
   A <- matrix(nrow=num_clusters,ncol=ncol(trainpharmat))
   SESeeds<-trainpharmat[s,]
   somma<-colSums(trainpharmat)
-  vettorepro<-somma/526
+  vettorepro<-somma/nrow(trainpharmat)
   numeroSostituzioni=0
     for(n in 1:num_clusters){
       l<-which(clusters==n)
@@ -157,7 +184,7 @@ KSeedsScores <- function(train,trainpharmat,num_clusters,Seed,s,clusters){
           SommaSideEffect<-colSums(drugs_cluster)
           SommaTotSE<-colSums(trainpharmat)
           NumeroDrugsCluster<-length(l)
-            for(y in 1:1339){
+            for(y in 1:ncol(trainpharmat)){
               P1=as.numeric(SommaSideEffect[y])/(SommaTotSE[y])
               P2=as.numeric(SommaTotSE[y])/nrow(train)
               P3=NumeroDrugsCluster/nrow(train)
@@ -181,11 +208,25 @@ KSeedsScores <- function(train,trainpharmat,num_clusters,Seed,s,clusters){
 #' @param Seed matrix of seeds initialize in the KSeed algorithm
 #' @param num_clusters number of clusters desired
 #' @param A matrix of Naive Bayes predictions scores, result of KSeedsScores function
+#' @param numcolsideffects number of sideeffects
 #' @return predizioni matrix containing predictions for the various uncharacterized drugs
+#' @examples
+#' features<-InitFeatures("bio2mat.txt")
+#' side_effects<-InitSideEffects("pharmat.txt")
+#' i=0
+#' train = features[folds != i,]
+#' trainpharmat = side_effects[folds != i,]
+#' test = features[folds == i,]
+#' testpharmat = side_effects[folds == i,]
+#' s<-RandomSeedGenerator(num_clusters,nrow(train))
+#' Seed<-SeedSelection(train,num_clusters,s)
+#' clusters<-KSeedsClusters (train,num_clusters,Seed,s)
+#' A<-KSeedsScores(train,trainpharmat,num_clusters,Seed,s,clusters)
+#' predizioni<-PredictionKSeeds(test,Seed,num_clusters,A,ncol(side_effects))
 #' @export
 
-PredictionKSeeds <-function(test,Seed,num_clusters,A){
-  predizioni=matrix(nrow=nrow(test),ncol=1339)
+PredictionKSeeds <-function(test,Seed,num_clusters,A,numcolsideffects){
+  predizioni=matrix(nrow=nrow(test),ncol=numcolsideffects)
   clusters_newdrugs<-numeric()
   h<-numeric()
     for(j in 1:nrow(test)){
@@ -226,6 +267,21 @@ PredictionKSeeds <-function(test,Seed,num_clusters,A){
 #' @param vectorAUC empty vector where the AUC values will be saved
 #' @param name string stating the name of the clustering Algorithm used, KSeeds, Kmeans or PAM
 #' @return vectorAUC vector containing the various AUC values for the various folds. Moreover the function draw the graph of AUC
+#' @examples #' #Function for obtaining AUC
+#' features<-InitFeatures("bio2mat.txt")
+#' side_effects<-InitSideEffects("pharmat.txt")
+#' i=0
+#' train = features[folds != i,]
+#' trainpharmat = side_effects[folds != i,]
+#' test = features[folds == i,]
+#' testpharmat = side_effects[folds == i,]
+#' s<-RandomSeedGenerator(num_clusters,nrow(train))
+#' Seed<-SeedSelection(train,num_clusters,s)
+#' clusters<-KSeedsClusters (train,num_clusters,Seed,s)
+#' A<-KSeedsScores(train,trainpharmat,num_clusters,Seed,s,clusters)
+#' predizioni<-PredictionKSeeds(test,Seed,num_clusters,A,ncol(side_effects))
+#' vectorAUC<-numeric()
+#' vectorAUC<-AUC(predizioni,testpharmat,vectorAUC,"KSeeds")
 #' @importFrom graphics plot abline legend
 #' @export
 
@@ -261,6 +317,22 @@ AUC<-function(predizioni,testpharmat,vectorAUC,name){
 #' @param name name of the clustering algorithm used (KSeeds, KMeans,PAM)
 #' @return vectorAUPR vector containing AUPR values for the various folds, the function also draws AUPR graphs
 #' @importFrom graphics plot abline legend
+#' @examples
+#' #Function for obtaining AUC
+#' features<-InitFeatures("bio2mat.txt")
+#' side_effects<-InitSideEffects("pharmat.txt")
+#' i=0
+#' train = features[folds != i,]
+#' trainpharmat = side_effects[folds != i,]
+#' test = features[folds == i,]
+#' testpharmat = side_effects[folds == i,]
+#' s<-RandomSeedGenerator(num_clusters,nrow(train))
+#' Seed<-SeedSelection(train,num_clusters,s)
+#' clusters<-KSeedsClusters (train,num_clusters,Seed,s)
+#' A<-KSeedsScores(train,trainpharmat,num_clusters,Seed,s,clusters)
+#' predizioni<-PredictionKSeeds(test,Seed,num_clusters,A,ncol(side_effects))
+#' vectorAUPR<-numeric()
+#' vectorAUPR<-AUPR(predizioni,testpharmat,vectorAUPR,"KSeeds")
 #' @export
 
 
@@ -300,6 +372,14 @@ AUPR <- function(predizioni,testpharmat,vectorAUPR,name){
 #' @param train matrix of train features
 #' @param num_clusters number of clusters desired
 #' @return cl list containing the clusters ownerships
+#' @examples
+#' #use the initFeatures to upload train feature matrix
+#' num_clusters=4
+#' features<-InitFeatures("bio2mat.txt")
+#' i=0
+#' train = features[folds != i,]
+#' test = features[folds == i,]
+#' cl<-KMeans(train,num_clusters)
 #' @export
 
 KMeans<-function(train,num_clusters){
@@ -318,6 +398,19 @@ return(cl)
 #' @param num_clusters number of clusters desired
 #' @param cl results of the KMeans model clustering function
 #' @return A Bayesian matrix of model for predictions, given the KMeans clustering
+#' @examples
+#' #First call the KMeans function and obtain cl (list of clusters
+#' cl<-KMeans(features,num_clusters)
+#' features<-InitFeatures("bio2mat.txt")
+#' pharmat<-InitSideEffects("pharmat.txt")
+#' features<-InitFeatures("bio2mat.txt")
+#' side_effects<-InitSideEffects("pharmat.txt")
+#' i=0
+#' train = features[folds != i,]
+#' trainpharmat = side_effects[folds != i,]
+#' test = features[folds == i,]
+#' testpharmat = side_effects[folds == i,]
+#' A<-KMeansModel(train,trainpharmat,4,cl)
 #' @export
 
 KMeansModel<-function(train,trainpharmat,num_clusters,cl){
@@ -357,6 +450,19 @@ return(A)
 #' @param test test matrix of drugs
 #' @return predizioni matrix with a number of rows equal to the number of clusters and a number of columns equal to the features
 #' @importFrom stats predict
+#' @examples
+#' # A will be the result of the previous call of KMeans model funcion
+#' #cl will be the result of KMeans function
+#' features<-InitFeatures("bio2mat.txt")
+#' side_effects<-InitSideEffects("pharmat.txt")
+#' i=0
+#' train = features[folds != i,]
+#' trainpharmat = side_effects[folds != i,]
+#' test = features[folds == i,]
+#' testpharmat = side_effects[folds == i,]
+#' cl<-KMeans(train,4)
+#' A<-KMeansModel(train,trainpharmat,4,cl)
+#' predizioni<-PredictionKMeans(A,cl,test)
 #' @export
 
 PredictionKMeans<-function(A,cl,test){
@@ -382,6 +488,11 @@ PredictionKMeans<-function(A,cl,test){
 #' @param train matrix of train features
 #' @param num_clusters number of clusters desired
 #' @return pamx structure with various values resulting from PAM clustering algorithm
+#' @examples
+#' features<-InitFeatures("bio2mat.txt")
+#' i=0
+#' train = features[folds != i,]
+#' pamx<-PAM(train,4)
 #' @export
 
 
@@ -401,6 +512,17 @@ PAM<-function(train,num_clusters){
 #' @param trainpharmat matrix of training for side effects
 #' @param train matrix of train features
 #' @return A matrix of model for prediction of uncharacterised drugs, given PAM clustering
+#' @examples
+#' #pamx is the result of the PAM function
+#' #trainpharmat is the side effect train matrix
+#' #train is the feature train matrix
+#' features<-InitFeatures("bio2mat.txt")
+#' side_effects<-InitSideEffects("pharmat.txt")
+#' i=0
+#' train = features[folds != i,]
+#' trainpharmat = side_effects[folds != i,]
+#' pamx<-PAM(train,4)
+#' A<-PAM_Model(pamx,4,trainpharmat,train)
 #' @export
 
 
@@ -440,6 +562,20 @@ return(A)
 #' @param test test features matrix
 #' @param numb_sideEffects number of side effects
 #' @return predizioni matrix of predictions given PAM clustering
+#' @examples
+#' #A is the result of PAM_Model function
+#' #pamx comes from the PAM function
+#' #test is the feature test matrix
+#' features<-InitFeatures("bio2mat.txt")
+#' side_effects<-InitSideEffects("pharmat.txt")
+#' i=0
+#' train = features[folds != i,]
+#' test = features[folds == i,]
+#' testpharmat = side_effects[folds == i,]
+#' trainpharmat = side_effects[folds != i,]
+#' pamx<-PAM(train,4)
+#' A<-PAM_Model(pamx,4,trainpharmat,train)
+#' predizioni<-PredictionPAM(A,pamx,test)
 #' @export
 
 PredictionPAM<-function(A,pamx,test,numb_sideEffects){
@@ -476,6 +612,20 @@ PredictionPAM<-function(A,pamx,test,numb_sideEffects){
 #' @param num_clusters number of clusters
 #' @param clusters clusters returned from the clustering algorithms
 #' @return vector_numb_pathway return a vector telling in how many pathways the various clusters are involved
+#' @examples
+#' #feature is the feature matrix
+#' features<-InitFeatures("bio2mat.txt")
+#' side_effects<-InitSideEffects("pharmat.txt")
+#' i=0
+#' train = features[folds != i,]
+#' test = features[folds == i,]
+#' testpharmat = side_effects[folds == i,]
+#' trainpharmat = side_effects[folds != i,]
+#' pamx<-PAM(train,4)
+#' A<-PAM_Model(pamx,4,trainpharmat,train)
+#' predizioni<-PredictionPAM(A,pamx,test)
+#' # pamx$clustering gives the list assigning each element to a certain cluster
+#' all_pathways<-Enrichment_Proteins(features,4,pamx$clustering)
 #' @export
 
 # This function returns a vector with the number of pathways in which the various

@@ -21,4 +21,10 @@ A Bayesian matrix of model for predictions, given the KMeans clustering
 \description{
 Function finding the Bayesian Model given the KMeans clustering algorithm
 }
+\examples{
+#First call the KMeans function and obtain cl (list of clusters)
+#train is the feature matrix of train
+#trainpharmat is the side effect matrix of train
+#A<-KMeansModel(train,trainpharmat,4,cl)
+}
 

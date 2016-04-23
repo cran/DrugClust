@@ -21,4 +21,11 @@ vectorAUC vector containing the various AUC values for the various folds. Moreov
 \description{
 Function Implementing metrics calculation of AUC
 }
+\examples{
+#' #Function for obtaining AUC
+#Once you have obtained predizioni with the Prediction function you can apply
+#this AUC function using the following command (testpharmat sideeffects test matrix)
+#vectorAUC<-numeric()
+#vectorAUC<-AUC(predizioni,testpharmat,vectorAUC,"KSeeds")
+}
 

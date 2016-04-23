@@ -13,7 +13,14 @@ DrugClustKSeedsEnrichment(num_clusters, features, pharmat)
 
 \item{pharmat}{matrix of side effects}
 }
+\value{
+number of pathways for various clusters
+}
 \description{
 Function Implementing DrugClust with KSeeds and Enrichment
+}
+\examples{
+#features is the features matrix
+#resultSeeds<-DrugClustKSeedsEnrichment(4,features)
 }
 
